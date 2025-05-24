@@ -4,28 +4,24 @@ from tqdm import tqdm
 import pyfiglet
 banner = pyfiglet.figlet_format("Scanner de Portas", font = "slant") 
 print(banner) 
-tipo = int(input("Bem vindo ao scanner de portas."
-      "\nPor favor selcione o tipo de scanner que deseja realizar.\n" 
-      "\n1 : Portas Bem conhecidas (0 até 1023)"
-      "\n2 : Portas Registradas (1024 até 49151)"
-      "\n3 : Scanner completo (0 até 49151)"
-      "\nDigite 0 para cancelar\n"))
 
-while tipo != 0:
-    #Setup para o range do scanner de acordo com o tipo selecionado
-    if tipo == 1:
-        scannerInicial=int(1)
-        scannerFinal=int(1024)
-    elif tipo == 2:
-        scannerInicial=int(1024)
-        scannerFinal=int(49152)
-    else:
-        scannerInicial=int(1)
-        scannerFinal=int(49152)
+def opcao():
+      #Função ultilizada para mostrar os tipo de portas e alcance do scanner assim como a opção de escolher o tipo digitando o número.
+    global tipo
+    tipo = int(input("\n1 : Portas Bem conhecidas (0 até 1023)"
+        "\n2 : Portas Registradas (1024 até 49151)"
+        "\n3 : Scanner completo (0 até 49151)"
+        "\nDigite 0 para cancelar\n"))
+
+def scan():
+    # Função para realizar o scanner.
+    # O alcance será definido pela opção que será selecionada antes dessa função ser usada. 
     # O ip do alvo será digitado pelo usuário
     alvo = input('Digite o IP/Dominio: ')
     # Lista que receberá o número das portas que estão abertas
     portaAberta=[]
+    #Criação das variáveis globais, cujos os valores serão recebidos pela escolha feita
+    global scannerInicial, scannerFinal
     # Loop de acordo com o tipo selecionado
     for porta in tqdm(range(scannerInicial, scannerFinal)):
         client = socket.socket()
@@ -36,9 +32,26 @@ while tipo != 0:
             portaAberta.append(porta)
     # listagem das portas abertas
     print("\nPortas abertas: \n",portaAberta)
-    #Opção para selecionar outro Scan ou finalizar
-    tipo = int(input("Deseja realizar outro Scan?.\n" 
-    "\n1 : Portas Bem conhecidas (0 até 1023)"
-    "\n2 : Portas Registradas (1024 até 49151)"
-    "\n3 : Scanner completo (0 até 49151)"
-    "\nDigite 0 para cancelar\n"))
+    print("\nDeseja realizar outro Scan?") 
+    opcao()
+      
+print("Bem vindo ao scanner de portas.\nPor favor selcione o tipo de scanner que deseja realizar.")
+opcao()
+while tipo != 0:
+    #Setup para o range do scanner de acordo com o tipo selecionado
+    if tipo == 1:
+        scannerInicial=int(1)
+        scannerFinal=int(1024)
+        scan()
+    elif tipo == 2:
+        scannerInicial=int(1024)
+        scannerFinal=int(49152)
+        scan()
+    elif tipo==3:
+        scannerInicial=int(1)
+        scannerFinal=int(49152)
+        scan()
+    else:
+    # Opção para o caso de selecionar o valor que não esta nas opções.
+        print("Opção invalida!! Selecione uma opção valida")
+        opcao()
